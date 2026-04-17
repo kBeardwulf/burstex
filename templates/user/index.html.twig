@@ -1,0 +1,55 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des utilisateurs{% endblock %}
+
+{% block body %}
+    <h1 class="mt-5">Liste des utilisateurs</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Firstname</th>
+                <th>Lastname</th>
+                <th>Pseudo</th>
+                <th>Mail</th>
+                <th>Birthdate</th>
+                <th>Address</th>
+                <th>ProfilePic</th>
+                <th>RegisteredAt</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for user in users %}
+            <tr>
+                <td>{{ user.id }}</td>
+                <td>{{ user.firstname }}</td>
+                <td>{{ user.lastname }}</td>
+                <td>{{ user.pseudo }}</td>
+                <td>{{ user.mail }}</td>
+                <td>{{ user.birthdate ? user.birthdate|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ user.address }}</td>
+                <td>{{ user.profilePic }}</td>
+                <td>{{ user.registeredAt ? user.registeredAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>
+                    <div class="d-flex flex-row gap-2">
+                        <a class="btn btn-primary" href="{{ path('app_user_edit', {'id': user.id}) }}">Modifier</a>
+                        <form action="{{ path('app_user_delete', {'id': user.id}) }}" method="post">
+                            <input type="hidden" name="_method">
+                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ user.id) }}">
+                            <button class="btn btn-danger" type="submit">Supprimer</button>
+                        </form>
+                    </div>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="10">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a class="btn btn-success" href="{{ path('app_user_create') }}">Créer un nouvel utilisateur</a>
+{% endblock %}

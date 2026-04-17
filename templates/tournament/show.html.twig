@@ -1,0 +1,210 @@
+{% extends 'base.html.twig' %}
+{% block title %}{{ tournament.name }}{% endblock %}
+{% block body %}
+
+    {# Bannière #}
+    <div class="position-relative-forbutton mt-3">
+    {% if tournament.banner %}
+        <img src="{{ asset('uploads/banners/' ~ tournament.banner) }}" alt="Bannière {{ tournament.name }}" class="img-fluid w-100" style="max-height: 300px; object-fit: cover;">
+    {% else %}
+        <div class="w-100 bg-secondary d-flex align-items-center justify-content-center" style="height: 200px;">
+            <span class="text-white fs-4 text-center">Aucune bannière<br>Format recommandé : 1296x200 ou x300 max<br></span>
+        </div>
+    {% endif %}
+
+    {% if isAdmin %}
+        <div class="button-overlay">
+            <button class="btn btn-light" onclick="document.getElementById('banner-form').classList.toggle('d-none')">Changer la bannière</button>
+
+            {% if tournament.banner %}
+                <form action="{{ path('app_tour_banner_remove', {'id': tournament.id}) }}" method="post" style="display:inline;" onsubmit="return confirm('Supprimer la bannière ?')">
+                    <input type="hidden" name="_token" value="{{ csrf_token('banner_remove' ~ tournament.id) }}">
+                    <button type="submit" class="ms-1 btn btn-light">Supprimer la bannière</button>
+                </form>
+            {% endif %}
+        </div>
+        
+    </div>
+    <div id="banner-form" class="d-none p-3">
+        <form action="{{ path('app_tour_banner', {'id': tournament.id}) }}" method="post" enctype="multipart/form-data">
+            <input type="hidden" name="_token" value="{{ csrf_token('banner' ~ tournament.id) }}">
+            <input type="file" name="banner" class="form-control mb-2" accept="image/*">
+            <button type="submit" class="btn btn-danger">Enregistrer</button>
+            <button type="button" class="btn btn-dark" onclick="document.getElementById('banner-form').classList.add('d-none')">Annuler</button>
+        </form>
+    </div>
+    {% endif %}
+
+    <div class="container mt-4">
+
+        {# Infos principales #}
+        <div class="d-flex justify-content-between align-items-start">
+            <div class="d-flex align-items-center gap-2">
+                <div class="icon-wrapper flex-shrink-0">
+                    {% if tournament.icon %}
+                        <img src="{{ asset('uploads/banners/' ~ tournament.icon) }}" class="customIcon rounded-3">
+                    {% else %}
+                        <div class="customIcon d-flex align-items-center justify-content-center rounded-3">
+                            <span class="text-white fw-bold fs-5">
+                                {{ tournament.name|first|upper }}
+                            </span>
+                        </div>
+                    {% endif %}
+                    {% if isAdmin %}
+                        <div class="icon-overlay rounded-3">
+                            <button class="btn btn-outline-light" onclick="document.getElementById('icon-form').classList.toggle('d-none')">✍🏻</button>
+                        </div>
+                    {% endif %}
+                </div>
+                <div>
+                    <h1 class="mb-0">{{ tournament.name }}</h1>
+                    <span class="badge bg-primary">{{ tournament.discipline }}</span>
+                </div>
+            </div>
+
+            <div class="d-flex gap-1">
+            {% if isAdmin %}
+                <a href="{{ path('app_tour_edit', {'id': tournament.id}) }}" class="btn btn-warning">Modifier le tournoi</a>
+            {% endif %}
+            {% if is_granted('ROLE_USER') %}
+                {% if isPlayer == null %}
+                    <form method="post" action="{{ path('app_tour_register', {'id': tournament.id}) }}">
+                        <input type="hidden" name="_token" value="{{ csrf_token('register' ~ tournament.id) }}">
+                        <button type="submit" class="btn btn-danger">S'inscrire au tournoi</button>
+                    </form>
+                {% elseif isPlayer %}
+                    <form method="post" action="{{ path('app_tour_unregister', {'id': tournament.id}) }}">
+                        <input type="hidden" name="_token" value="{{ csrf_token('unregister' ~ tournament.id) }}">
+                        <button type="submit" class="btn btn-outline-danger">Se désinscrire</button>
+                    </form>
+                {% endif %}
+            {% endif %}
+            </div>
+        </div>
+
+        {% if isAdmin %}
+            <div id="icon-form" class="d-none p-3">
+                <form action="{{ path('app_tour_icon', {'id': tournament.id}) }}" method="post" enctype="multipart/form-data">
+                    <input type="hidden" name="_token" value="{{ csrf_token('icon' ~ tournament.id) }}">
+                    <input type="file" name="icon" class="form-control mb-2" accept="image/*">
+                    <button type="submit" class="btn btn-danger">Enregistrer</button>
+                    <button type="button" class="btn btn-dark" onclick="document.getElementById('icon-form').classList.add('d-none')">Annuler</button>
+                </form>
+            </div>
+        {% endif %}
+
+        <hr>
+
+        {# Détails #}
+        <div class="row mt-3">
+            <div class="col-4">
+                <p><strong>👥 Participants max :</strong> {{ tournament.maxNb ? tournament.maxNb : 'Illimité' }}</p>
+                <p><strong>📍 Lieu :</strong> {{ tournament.location ? tournament.location.name ~ ' (' ~ tournament.location.postalcode ~ ')' : 'En ligne' }}</p>
+            </div>
+            <div class="col-4">
+                <p><strong>💰 Prix d'entrée :</strong> {{ tournament.price ? tournament.price ~ ' €' : 'Gratuit' }}</p>
+                <p><strong>📅 Date de début :</strong> {{ tournament.date|date('d/m/Y') }}</p>
+            </div>
+            <div class="col-4">
+                <p><strong>📧 Contact :</strong> {{ tournament.mail }}</p>
+                <p><strong>📅 Date de fin :</strong> {{ tournament.endDate|date('d/m/Y') }}</p>
+            </div>
+        </div>
+
+        <hr>
+
+        {# Description #}
+        <div class="mt-3">
+            <div class="d-flex justify-content-between align-items-center">
+                <h4>Présentation</h4>
+                {% if isAdmin %}
+                    <button class="btn btn-outline-success"
+                        onclick="
+                            document.getElementById('description-form').classList.toggle('d-none'); 
+                            document.getElementById('description-display').classList.toggle('d-none')">
+                        ✏️ Modifier la description
+                    </button>
+                {% endif %}
+            </div>
+            <div id="description-display">
+                {% if tournament.description %}
+                    <p>{{ tournament.description|raw }}</p>
+                {% else %}
+                    <p class="text-muted fst-italic">Aucune description pour le moment.</p>
+                {% endif %}
+            </div>
+            {% if isAdmin %}
+                <div id="description-form" class="d-none mt-3">
+                    <form action="{{ path('app_tour_description', {'id': tournament.id}) }}" method="post">
+                        <input type="hidden" name="_token" value="{{ csrf_token('description' ~ tournament.id) }}">
+                        <textarea id="editor" name="description">{{ tournament.description }}</textarea>
+                        <button type="submit" class="btn btn-danger mt-2">Enregistrer</button>
+                        <button type="button" class="btn btn-secondary mt-2"
+                            onclick="
+                                document.getElementById('description-form').classList.add('d-none'); 
+                                document.getElementById('description-display').classList.remove('d-none')">
+                            Annuler
+                        </button>
+                    </form>
+                </div>
+
+                <!--CDN d'un WYSIWIG nommé "TinyMCE" afin de pouvoir manipuler ce que l'on affiche dans la description-->
+                <script src="https://cdn.tiny.cloud/1/h3u3ej96vt5yj4s2d3zag28jgig4ei8ni5asqfzr6axiy3ky/tinymce/6/tinymce.min.js"></script>
+                <script>
+                    tinymce.init({
+                        selector: '#editor',
+                        plugins: 'lists link',
+                        toolbar: 'bold italic underline | bullist numlist | link',
+                    });
+                </script>
+            {% endif %}
+        </div>
+
+        <hr>
+
+        {# Liste des inscrits #}
+        <div class="mt-3">
+            <h4>Participants <span class="badge bg-secondary">{{ players|length }}</span></h4>
+            {% if players is not empty %}
+                <div class="d-flex flex-wrap gap-3 mt-3">
+                    {% for registered in players %}
+                        <div class="d-flex flex-column align-items-center" style="width: 80px;">
+                            {# Photo de profil #}
+                            {% if registered.user.profilePic %}
+                                <img src="{{ asset('uploads/profiles/' ~ registered.user.profilePic) }}"
+                                     alt="{{ registered.user.pseudo }}"
+                                     class="customImg rounded-circle">
+                            {% else %}
+                                <div class="customGeometry rounded-circle bg-danger d-flex align-items-center justify-content-center">
+                                    <span class="text-white fw-bold fs-5">
+                                        {{ registered.user.pseudo|first|upper }}
+                                    </span>
+                                </div>
+                            {% endif %}
+                            <small class="text-center mt-1 registeredPseudo">
+                                {{ registered.user.pseudo }}
+                            </small>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p class="text-muted fst-italic">Aucun participant pour le moment.</p>
+            {% endif %}
+        </div>
+
+        <hr>
+
+        {# Bouton inscription #}
+        {% if app.user %}
+            {% if isAdmin %}
+                <div class="alert alert-info">Vous êtes administrateur de ce tournoi.</div>
+            {% else %}
+                <a href="{{ path('app_tour_register', {'id': tournament.id}) }}" class="btn btn-danger btn-lg">S'inscrire au tournoi</a>
+            {% endif %}
+        {% else %}
+            <a href="{{ path('app_login') }}" class="btn btn-outline-danger">Connectez-vous pour vous inscrire</a>
+        {% endif %}
+
+    </div>
+
+{% endblock %}

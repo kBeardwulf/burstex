@@ -1,0 +1,56 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ tournament is defined ? 'Modifier' : 'Créer' }} un tournoi{% endblock %}
+
+{% block body %}
+    {% for flash_error in app.flashes('verify_email_error') %}
+        <div class="alert alert-danger" role="alert">{{ flash_error }}</div>
+    {% endfor %}
+
+    <h1 class="mt-5">{{ tournament is defined ? 'Modifier le tournoi' : 'Créer un tournoi' }}</h1>
+
+    {{ form_errors(tournamentForm) }}
+
+    {{ form_start(tournamentForm) }}
+        
+        {{ form_row(tournamentForm.name) }}
+
+        <div class="row">
+            <div class="col">
+                {{ form_row(tournamentForm.date) }}
+            </div>
+
+            <div class="col">
+                {{ form_row(tournamentForm.end_date) }}
+            </div>
+            
+            <div class="col">
+                {{ form_row(tournamentForm.price) }}
+            </div>
+        </div>
+
+        {{ form_row(tournamentForm.discipline) }}
+
+        <div class="row">
+            <div class="col">
+                {{ form_row(tournamentForm.location) }}
+            </div>
+            
+            <div class="col">
+                {{ form_row(tournamentForm.address) }}
+            </div>
+
+            <div class="col">
+                {{ form_row(tournamentForm.max_nb) }}
+            </div>
+        </div>
+
+        {{ form_row(tournamentForm.mail) }}
+
+        {{ form_row(tournamentForm.agreeTerms) }}
+
+        {# On aurait pu l'intégrer dans le Formulaire TWIG comme pour les autres #}
+        <button type="submit" class="btn btn-danger">Créer</button>
+
+    {{ form_end(tournamentForm) }}
+{% endblock %}

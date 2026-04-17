@@ -1,0 +1,46 @@
+<header>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-danger">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="{{ path('app_tournament') }}">
+                Burst.ex
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarMain">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a href="{{ path('app_tour_dashboard') }}" class="nav-link">Mes tournois</a>
+                    </li>
+
+                    {# On vérifie si un utilisateur est connecté ou non #}
+                    {% if app.user %}
+                    <li class="nav-item">
+                        <a href="{{ path('app_tour_create') }}" class="nav-link">Créer un tournoi</a>
+                    </li>
+
+                    {# Vérification si rôle PROF #}
+                    {#{% if is_granted('ROLE_PROF') %}#}
+                    {#<li class="nav-item">#}
+                        {#<a href="{{
+                         path('app_type') }}" class="nav-link">Types</a>#}
+                    {#</li>
+                    {% endif %}#}
+
+                    <li class="nav-item">
+                        <a href="{{ path('app_logout') }}" class="nav-link">Se déconnecter</a>
+                    </li>
+                    {% else %}
+                    <li class="nav-item">
+                        <a href="{{ path('app_user_create') }}" class="nav-link">S'inscrire</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ path('app_login') }}" class="nav-link">Se connecter</a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </div>
+            <div class="nav-dot"></div>
+        </div>
+    </nav>
+</header>

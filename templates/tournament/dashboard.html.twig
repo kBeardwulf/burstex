@@ -1,0 +1,44 @@
+{% extends 'base.html.twig' %}
+{% block title %}Mes tournois{% endblock %}
+{% block body %}
+    <h1 class="mt-5 mb-2">Mes tournois</h1>
+    <table class="table table-striped table-hover">
+        <thead class="table-dark">
+            <tr>
+                <th>Nom</th>
+                <th>Discipline</th>
+                <th>Date de début</th>
+                <th>Date de fin</th>
+                <th>Ville</th>
+                <th>Prix</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for tournament in tournaments %}
+            <tr>
+                <td>{{ tournament.name }}</td>
+                <td>{{ tournament.discipline }}</td>
+                <td>{{ tournament.date|date('d/m/Y') }}</td>
+                <td>{{ tournament.endDate|date('d/m/Y') }}</td>
+                <td>{{ tournament.location ? tournament.location.name : 'En ligne' }}</td>
+                <td>{{ tournament.price ? tournament.price ~ ' €' : 'Gratuit' }}</td>
+                <td>
+                    <a href="{{ path('app_tour_show', {'id': tournament.id}) }}" class="btn btn-sm btn-primary">Voir</a>
+                    <a href="{#{{ path('app_tour_edit', {'id': tournament.id}) }}#}" class="btn btn-sm btn-warning">Modifier</a>
+                    <form action="{#{{ path('app_tour_delete', {'id': tournament.id}) }}#}" method="post" style="display:inline;" 
+                        onsubmit="return confirm('Ceci va supprimer le tournoi ainsi que tout les potentiels inscrits à celui-ci. Êtes-vous sûr de vouloir supprimer ce tournoi ?')">
+                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ tournament.id) }}">
+                        <button class="btn btn-sm btn-danger" type="submit">Supprimer</button>
+                    </form>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="7" class="text-center">Aucun tournoi créé pour le moment</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <a href="{{ path('app_tour_create') }}" class="btn btn-danger">Créer un tournoi</a>
+{% endblock %}

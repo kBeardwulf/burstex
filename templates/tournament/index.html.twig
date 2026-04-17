@@ -1,0 +1,126 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello TournamentController!{% endblock %}
+
+{% block body %}
+{% include 'components/tournamentSlider.html.twig' with { tournaments: tournaments } %}
+
+
+<section class="mb-5">
+    <div class="text-center">
+        <img class="logo-resize" src="{{ asset('images/BURST.ex.png') }}">
+    </div>
+    <div class="text-center mt-5 mb-4">
+        <a class="btn btn-success btn-lg" href="{{ path('app_tour_create') }}">Créer mon tournoi</a>
+    </div>
+    <h2 class="text-center mb-5">Ou alors</h2>
+    <div id="search-container">
+
+        {# Champ commun #}
+        <div class="d-flex">
+            <input class="form-control form-control-lg customSearchBar" type="text" id="keyword" placeholder="Rechercher...">
+            <button class="btn btn-primary btn-lg ms-3" type="submit">Rechercher</button> 
+        </div>
+
+        {# Des filtres pour le tri #}
+        <div class="d-flex flex-row gap-2 mt-2">
+            <label class="form-check-label mt-1">Date d'intervalle</label>
+        </div>
+        <div class="d-flex flex-row gap-2">
+            <input class="form-control" type="date" id="date-from">
+            <input class="form-control" type="date" id="date-to">
+            <input class="form-control" type="number" id="size" placeholder="Nb participants">
+        </div>
+        
+        {# filtres radio #}
+        <div class="mt-2">
+            <label class="form-check-label">Tournois</label>
+            <input class="form-check-input" type="radio" name="type" value="tournament" checked> 
+            <label class="form-check-label ms-2">Utilisateurs</label>
+            <input class="form-check-input" type="radio" name="type" value="user"> 
+        </div>
+
+        {# Résultats #}
+        <div id="results"></div>
+
+    </div>
+</section>
+
+<div>
+    <h4>Liste des tournois récents</h4>
+    {% set per_page = 3 %}
+        {% set pages = tournaments|batch(per_page, null) %}
+
+        <div class="tournament-slider">
+        <div class="slider-track-wrapper">
+            <div class="slider-track" id="tournamentTrack">
+
+            {% for page in pages %}
+                <div class="slider-page">
+                {% for tournament in page %}
+                    {% if tournament is not null %}
+                    <div class="tournament-card">
+                        <div class="tournament-banner">
+                        {% if tournament.icon %}
+                            <img src="{{ asset('uploads/banners/' ~ tournament.icon) }}">
+                        {% else %}
+                            <div class="customIcon d-flex align-items-center justify-content-center rounded-3">
+                                <span class="text-white fw-bold fs-5">
+                                    {{ tournament.name|first|upper }}
+                                </span>
+                            </div>
+                        {% endif %}
+                        </div>
+                        <div class="tournament-info">
+                        <p class="tournament-label">Tournoi</p>
+                        <p class="tournament-name">{{ tournament.name }}</p>
+                        <span class="tournament-date">
+                            {# Si c'est un objet DateTime : #}
+                            <span class="tournament-date">
+                                {{ tournament.date|date('d M Y') }}
+                            </span>
+                            {{ tournament.endDate|date('d M Y') }}
+                        </span>
+                        </div>
+                    </div>
+                    {% else %}
+                    {# Cellule vide pour compléter la dernière page #}
+                    <div class="tournament-card tournament-card--empty"></div>
+                    {% endif %}
+                {% endfor %}
+                </div>
+            {% endfor %}
+
+            </div>
+        </div>
+
+        <div class="slider-controls">
+            <button class="slider-btn" id="tournamentPrev" aria-label="Page précédente">← Préc.</button>
+            <div class="slider-dots" id="tournamentDots">
+            {% for page in pages %}
+                <div class="dot {% if loop.first %}dot--active{% endif %}"></div>
+            {% endfor %}
+            </div>
+            <button class="slider-btn" id="tournamentNext" aria-label="Page suivante">Suiv. →</button>
+        </div>
+    </div>
+</div>
+
+<section>
+    <div class="text-center mt-5">
+        <h2>Tournoi en vedette</h2>
+        <div class="card mb-3">
+            <img src="..." class="card-img-top" alt="...">
+            <div class="card-body">
+                <h5 class="card-title">Card title</h5>
+                <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+            </div>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">An item</li>
+            </ul>
+        </div>
+    </div>
+</section>
+
+{% endblock %}
