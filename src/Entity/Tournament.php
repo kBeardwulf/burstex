@@ -51,6 +51,9 @@ class Tournament
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $icon = null;
 
+    #[ORM\ManyToOne]
+    private ?User $createdBy = null;
+
     public function __construct()
     {
     }
@@ -200,6 +203,18 @@ class Tournament
     public function setIcon(?string $icon): static
     {
         $this->icon = $icon;
+
+        return $this;
+    }
+
+    public function getCreatedBy(): User
+    {
+        return $this->createdBy;
+    }
+
+    public function setCreatedBy(User $createdBy): static
+    {
+        $this->createdBy = $createdBy;
 
         return $this;
     }

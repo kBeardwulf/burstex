@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Registered;
+use App\Entity\Tournament;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -16,28 +17,14 @@ class RegisteredRepository extends ServiceEntityRepository
         parent::__construct($registry, Registered::class);
     }
 
-//    /**
-//     * @return Registered[] Returns an array of Registered objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('r')
-//            ->andWhere('r.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('r.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
-
-//    public function findOneBySomeField($value): ?Registered
-//    {
-//        return $this->createQueryBuilder('r')
-//            ->andWhere('r.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+    public function findStaffByTournament(Tournament $tournament): array
+    {
+        return $this->createQueryBuilder('r')
+            ->where('r.tournament = :tournament')
+            ->andWhere('r.role IN (:roles)')
+            ->setParameter('tournament', $tournament)
+            ->setParameter('roles', ['admin', 'org'])
+            ->getQuery()
+            ->getResult();
+    }
 }

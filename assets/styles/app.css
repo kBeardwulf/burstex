@@ -1,94 +1,77 @@
 
 
-.tournament-slider {
-    width: 100%;
-    font-family: sans-serif;
+/* CSS of the splide slider */
+.tour-card-link {
+    text-decoration: none;
+    color: inherit;
 }
 
-.slider-track-wrapper {
-    overflow: hidden;
+.tour-card {
     border: 1px solid #e5e7eb;
     border-radius: 12px;
-}
-
-.slider-track {
-    display: flex;
-    transition: transform 0.35s cubic-bezier(.4, 0, .2, 1);
-    cursor: grab;
-    user-select: none;
-}
-
-.slider-track:active {
-    cursor: grabbing;
-}
-
-.slider-page {
-    min-width: 100%;
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1px;
-    background: #e5e7eb;
-}
-
-.tournament-card {
-    background: #fff;
-    padding: 16px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    min-height: 110px;
-}
-
-.tournament-card--empty {
-    background: #f9fafb;
-}
-
-.tournament-banner {
-    flex-shrink: 0;
-    width: 70px;
-    height: 70px;
-    border-radius: 8px;
     overflow: hidden;
-    border: 1px solid #e5e7eb;
-    background: #f3f4f6;
+    transition: box-shadow 0.2s ease;
+}
+
+.tour-card:hover {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.tour-card-banner {
+    width: 100%;
+    height: 120px;
+    object-fit: cover;
+    display: block;
+}
+
+.tour-card-banner--empty {
+    height: 120px;
+    background: #6c757d;
     display: flex;
     align-items: center;
     justify-content: center;
+    color: white;
+    font-size: 13px;
 }
 
-.tournament-banner img {
-    width: 100%;
-    height: 100%;
+.tour-card-body {
+    padding: 12px;
+}
+
+.tour-card-icon {
+    width: 36px;
+    height: 36px;
     object-fit: cover;
+    flex-shrink: 0;
 }
 
-.banner-placeholder {
-    font-size: 28px;
+.tour-card-icon--placeholder {
+    width: 36px;
+    height: 36px;
+    background: #dc3545;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
 }
 
-.tournament-info {
-    min-width: 0;
+.tour-card-icon--placeholder span {
+    color: white;
+    font-weight: bold;
+    font-size: 14px;
 }
 
-.tournament-label {
-    font-size: 10px;
-    color: #9ca3af;
-    margin: 0 0 3px;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-}
-
-.tournament-name {
+.tour-card-name {
     font-size: 14px;
     font-weight: 500;
     color: #111827;
-    margin: 0 0 6px;
+    margin: 0;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
 }
 
-.tournament-date {
+.tour-card-date {
     font-size: 11px;
     background: #eff6ff;
     color: #1d4ed8;
@@ -97,44 +80,21 @@
     white-space: nowrap;
 }
 
-.slider-controls {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-top: 10px;
+.splide__pagination__page {
+    background: #6c757d !important; /* inactive dots are lighter gray */
+    opacity: 0.40;
 }
 
-.slider-btn {
-    font-size: 13px;
-    padding: 4px 14px;
-    border-radius: 999px;
-    border: 1px solid #d1d5db;
-    background: transparent;
-    cursor: pointer;
-    color: #374151;
-    transition: background 0.2s;
+.splide__pagination__page.is-active {
+    background: #414141 !important; /* active dot is darker gray*/
+    opacity: 0.40;
 }
 
-.slider-btn:hover {
-    background: #f3f4f6;
+.splide__pagination {
+    bottom: -25px !important; /* bring the dots lower to not be on the cards */
 }
 
-.slider-dots {
-    display: flex;
-    gap: 6px;
-}
-
-.dot {
-    width: 7px;
-    height: 7px;
-    border-radius: 50%;
-    background: #d1d5db;
-    transition: background 0.3s;
-}
-
-.dot--active {
-    background: #111827;
-}
+/* -------------------------------------- */
 
 .customSearchBar {
     width: 90%;
@@ -168,6 +128,15 @@
     text-overflow: ellipsis;
     white-space: nowrap;
     width: 100%;
+}
+
+.staffRole {
+    font-size: 12px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 100%;
+    opacity: 0.7;
 }
 
 .customGeometry, .customImg {
@@ -220,6 +189,26 @@
 
 .logo-resize {
     width: 1100px;
+}
+
+.banner-in-listpage {
+    height: 150px;
+    object-fit: cover;
+}
+
+.bannerdiv-in-listpage {
+    height: 150px;
+}
+
+.icon-in-listpage {
+    width: 40px;
+    height: 40px;
+    object-fit: cover;
+}
+
+.icondiv-in-listpage {
+    width: 40px;
+    height: 40px;
 }
 
 /* Responsive : 2 colonnes sur tablette, 1 sur mobile */

@@ -20,10 +20,23 @@ final class TournamentController extends AbstractController
     #[Route('/tournament/home', name: 'app_tournament')]
     public function index(TournamentRepository $tournamentRepository): Response
     {
-        $tournaments = $tournamentRepository->findAll();
+        $tournaments = $tournamentRepository->findBy([], ['date' => 'ASC']);
 
         return $this->render('tournament/index.html.twig', [
             'controller_name' => 'TournamentController',
+            'tournaments' => $tournaments,
+        ]);
+    }
+
+    /**
+     * lists every tournament posted, ordered by the most recent or depending on the research made
+     */
+    #[Route('/tournament/list', name: 'app_tour_list', methods: ['GET'])]
+    public function list(TournamentRepository $tournamentRepository): Response
+    {
+
+        $tournaments = $tournamentRepository->findAll();
+        return $this->render('tournament/list.html.twig', [
             'tournaments' => $tournaments,
         ]);
     }
@@ -41,6 +54,7 @@ final class TournamentController extends AbstractController
             
             $entityManager->persist($objTour);
 
+            $objTour->setCreatedBy($this->getUser());
             $objRegistered = new Registered();
             $objRegistered->setTournament($objTour);
             $objRegistered->setUser($this->getUser());
@@ -67,7 +81,7 @@ final class TournamentController extends AbstractController
             'role' => 'admin'
         ]);
 
-        // Finds if the current user is the creator, or if he has been given the rights to the tournament or not
+        // Finds if the current user is an administrator of the tournament
         // by checking if his role is set to "admin", 
         // tied to the tournament in the DB, inside the "Registered" table
         $isAdmin = false;
@@ -77,6 +91,8 @@ final class TournamentController extends AbstractController
                 break;
             }
         }
+
+        $staff = $entityManager->getRepository(Registered::class)->findStaffByTournament($tournament);
 
         // Finds if the current user is registered to the tournament or not by checking if his role is set to "player", 
         // tied to the tournament in the DB, inside the "Registered" table
@@ -97,6 +113,7 @@ final class TournamentController extends AbstractController
             'isAdmin' => $isAdmin,
             'isPlayer' => $isPlayer,
             'players' => $players,
+            'staff' => $staff,
         ]);
     }
 
@@ -246,7 +263,7 @@ final class TournamentController extends AbstractController
                 $fileUploader->remove($oldIcon);
             }
 
-            $this->addFlash('success', 'Bannière mise à jour !');
+            $this->addFlash('success', 'Icone mise à jour !');
         }
 
         return $this->redirectToRoute('app_tour_show', ['id' => $tournament->getId()]);

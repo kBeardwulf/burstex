@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello TournamentController!{% endblock %}
+{% block title %}Page d'accueil{% endblock %}
 
 {% block body %}
 {% include 'components/tournamentSlider.html.twig' with { tournaments: tournaments } %}
@@ -13,7 +13,7 @@
     <div class="text-center mt-5 mb-4">
         <a class="btn btn-success btn-lg" href="{{ path('app_tour_create') }}">Créer mon tournoi</a>
     </div>
-    <h2 class="text-center mb-5">Ou alors</h2>
+    <h3 class="text-center mb-5">Ou alors</h3>
     <div id="search-container">
 
         {# Champ commun #}
@@ -46,65 +46,48 @@
     </div>
 </section>
 
-<div>
-    <h4>Liste des tournois récents</h4>
-    {% set per_page = 3 %}
-        {% set pages = tournaments|batch(per_page, null) %}
+<div class="mt-4">
+    <h4 class="mb-3">Tournois récents</h4>
+    <section class="splide" aria-label="Tournois récents"> <!-- class splide is where you pass the JS options-->
+        <div class="splide__track"> <!-- splide track hides every information that goes above the visible window -->
+            <ul class="splide__list"> <!-- this provides all the slides -->
+                {% for tournament in tournaments %}
+                <li class="splide__slide"> <!-- this is one slide -->
+                    <a href="{{ path('app_tour_show', {'id': tournament.id}) }}" class="tour-card-link">
+                        <div class="tour-card">
+                            {# Bannière #}
+                            {% if tournament.banner %}
+                                <img src="{{ asset('uploads/banners/' ~ tournament.banner) }}" class="tour-card-banner">
+                            {% else %}
+                                <div class="tour-card-banner tour-card-banner--empty">
+                                    <span>Aucune bannière</span>
+                                </div>
+                            {% endif %}
 
-        <div class="tournament-slider">
-        <div class="slider-track-wrapper">
-            <div class="slider-track" id="tournamentTrack">
-
-            {% for page in pages %}
-                <div class="slider-page">
-                {% for tournament in page %}
-                    {% if tournament is not null %}
-                    <div class="tournament-card">
-                        <div class="tournament-banner">
-                        {% if tournament.icon %}
-                            <img src="{{ asset('uploads/banners/' ~ tournament.icon) }}">
-                        {% else %}
-                            <div class="customIcon d-flex align-items-center justify-content-center rounded-3">
-                                <span class="text-white fw-bold fs-5">
-                                    {{ tournament.name|first|upper }}
-                                </span>
+                            {# Icone + Titre #}
+                            <div class="tour-card-body">
+                                <div class="d-flex align-items-center gap-2 mb-1">
+                                    {% if tournament.icon %}
+                                        <img src="{{ asset('uploads/banners/' ~ tournament.icon) }}" class="tour-card-icon rounded-2">
+                                    {% else %}
+                                        <div class="tour-card-icon tour-card-icon--placeholder rounded-2">
+                                            <span>{{ tournament.name|first|upper }}</span>
+                                        </div>
+                                    {% endif %}
+                                    <p class="tour-card-name">{{ tournament.name }}</p>
+                                </div>
+                                <span class="tour-card-date">{{ tournament.date|date('d M Y') }} → {{ tournament.endDate|date('d M Y') }}</span>
                             </div>
-                        {% endif %}
                         </div>
-                        <div class="tournament-info">
-                        <p class="tournament-label">Tournoi</p>
-                        <p class="tournament-name">{{ tournament.name }}</p>
-                        <span class="tournament-date">
-                            {# Si c'est un objet DateTime : #}
-                            <span class="tournament-date">
-                                {{ tournament.date|date('d M Y') }}
-                            </span>
-                            {{ tournament.endDate|date('d M Y') }}
-                        </span>
-                        </div>
-                    </div>
-                    {% else %}
-                    {# Cellule vide pour compléter la dernière page #}
-                    <div class="tournament-card tournament-card--empty"></div>
-                    {% endif %}
+                    </a>
+                </li>
                 {% endfor %}
-                </div>
-            {% endfor %}
-
-            </div>
+            </ul>
         </div>
-
-        <div class="slider-controls">
-            <button class="slider-btn" id="tournamentPrev" aria-label="Page précédente">← Préc.</button>
-            <div class="slider-dots" id="tournamentDots">
-            {% for page in pages %}
-                <div class="dot {% if loop.first %}dot--active{% endif %}"></div>
-            {% endfor %}
-            </div>
-            <button class="slider-btn" id="tournamentNext" aria-label="Page suivante">Suiv. →</button>
-        </div>
-    </div>
+    </section>
 </div>
+
+{{ include('_partials/splide.html.twig') }}
 
 <section>
     <div class="text-center mt-5">

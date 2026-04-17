@@ -16,6 +16,24 @@ class TournamentRepository extends ServiceEntityRepository
         parent::__construct($registry, Tournament::class);
     }
 
+
+    public function findbyTheSearchedValue(?string $value) {
+        
+        $queryBuilder = $this->createQueryBuilder('t')->orderBy('t.date', 'DESC')
+            ->andWhere('t.date >= :now')
+            ->setParameter('now', new \DateTime('now'));
+
+        if($value) {
+        $queryBuilder
+            ->andWhere('LOWER(t.name) LIKE LOWER(:value) 
+                OR LOWER(t.discipline) LIKE LOWER(:value) 
+                OR LOWER(t.address) LIKE LOWER(:value)')
+            ->setParameter('value', '%' . $value . '%');
+    }
+
+        return $queryBuilder->getQuery()->getResult();
+
+    }
     //    /**
     //     * @return Tournament[] Returns an array of Tournament objects
     //     */

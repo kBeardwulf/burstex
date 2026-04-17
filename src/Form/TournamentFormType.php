@@ -48,7 +48,7 @@ class TournamentFormType extends AbstractType
                     return $town->getName() . ' (' . $town->getPostalCode() . ')';
                 },
                 'label' => 'Ville',
-                'placeholder' => 'Choisir une ville',
+                'placeholder' => 'En ligne',
                 'required' => false,
             ])
             ->add('address', TextType::class, [

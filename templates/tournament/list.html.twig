@@ -1,0 +1,63 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Tout les tournois{% endblock %}
+
+{% block body %}
+{% include 'components/tournamentSlider.html.twig' with { tournaments: tournaments } %}
+
+<section>
+    
+    <div class="container mt-4">
+        <h1>Tous les tournois</h1>
+        <div class="row row-cols-1 row-cols-md-3 g-4 mt-2">
+            {% for tournament in tournaments %}
+                <div class="col">
+                    <div class="card h-100 shadow-sm">
+                        {# Bannière #}
+                        {% if tournament.banner %}
+                            <img class="banner-in-listpage card-img-top" src="{{ asset('uploads/banners/' ~ tournament.banner) }}">
+                        {% else %}
+                            <div class="bg-secondary d-flex align-items-center justify-content-center bannerdiv-in-listpage">
+                                <span class="text-white">Aucune bannière</span>
+                            </div>
+                        {% endif %}
+
+                        <div class="card-body">
+                            {# Icone + Titre #}
+                            <div class="d-flex align-items-center gap-2 mb-2">
+                                {% if tournament.icon %}
+                                    <img src="{{ asset('uploads/banners/' ~ tournament.icon) }}" class="rounded-2 icon-in-listpage">
+                                {% else %}
+                                    <div class="icondiv-in-listpage rounded-2 bg-danger d-flex align-items-center justify-content-center flex-shrink-0">
+                                        <span class="text-white fw-bold">{{ tournament.name|first|upper }}</span>
+                                    </div>
+                                {% endif %}
+                                <h5 class="card-title mb-0">{{ tournament.name }}</h5>
+                            </div>
+
+                            <span class="badge bg-primary mb-2">{{ tournament.discipline }}</span>
+
+                            <p class="card-text">
+                                <small>📅 {{ tournament.date|date('d/m/Y') }} → {{ tournament.endDate|date('d/m/Y') }}</small><br>
+                                <small>📍 {{ tournament.location ? tournament.location.name : 'En ligne' }}</small><br>
+                                <small>💰 {{ tournament.price ? tournament.price ~ ' €' : 'Gratuit' }}</small>
+                            </p>
+
+                            <p class="card-text">
+                                <small class="text-muted">Créé par <strong>{{ tournament.createdBy.pseudo }}</strong></small>
+                            </p>
+                        </div>
+
+                        <div class="card-footer">
+                            <a href="{{ path('app_tour_show', {'id': tournament.id}) }}" class="btn btn-danger btn-sm w-100">Voir le tournoi</a>
+                        </div>
+                    </div>
+                </div>
+            {% else %}
+                <p class="text-muted">Aucun tournoi pour le moment.</p>
+            {% endfor %}
+        </div>
+    </div>
+
+</section>
+{% endblock %}
