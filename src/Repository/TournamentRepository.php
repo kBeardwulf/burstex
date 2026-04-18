@@ -17,19 +17,52 @@ class TournamentRepository extends ServiceEntityRepository
     }
 
 
-    public function findbyTheSearchedValue(?string $value) {
+    public function searchTournaments(
+        ?string $value = null, ?string $dateFrom = null, ?string $dateTo = null,
+        ?string $maxNb = null, ?string $upcoming = null, ?string $type = null 
+        ): array {
         
-        $queryBuilder = $this->createQueryBuilder('t')->orderBy('t.date', 'DESC')
-            ->andWhere('t.date >= :now')
-            ->setParameter('now', new \DateTime('now'));
+        $queryBuilder = $this->createQueryBuilder('t')->orderBy('t.date', 'DESC');
 
-        if($value) {
-        $queryBuilder
-            ->andWhere('LOWER(t.name) LIKE LOWER(:value) 
-                OR LOWER(t.discipline) LIKE LOWER(:value) 
-                OR LOWER(t.address) LIKE LOWER(:value)')
-            ->setParameter('value', '%' . $value . '%');
-    }
+        if($type === 'user' && $value) {
+            $queryBuilder
+                ->leftJoin('t.createdBy', 'u')
+                ->andWhere('LOWER(u.pseudo) LIKE LOWER(:value)')
+                ->setParameter('value', '%' . $value . '%');
+
+        } elseif($value) {
+            $queryBuilder
+                ->leftJoin('t.Location', 'town')
+                ->andWhere('LOWER(t.name) LIKE LOWER(:value) 
+                    OR LOWER(t.discipline) LIKE LOWER(:value) 
+                    OR LOWER(town.name) LIKE LOWER(:value)
+                    OR LOWER(town.postalcode) LIKE LOWER(:value)')
+                ->setParameter('value', '%' . $value . '%');
+        } 
+
+        if($dateFrom) {
+            $queryBuilder
+                ->andWhere('t.date >= :dateFrom')
+                ->setParameter('dateFrom', new \DateTime($dateFrom));
+        }
+
+        if($dateTo) {
+            $queryBuilder
+                ->andWhere('t.date <= :dateTo')
+                ->setParameter('dateTo', new \DateTime($dateTo));
+        }
+
+        if($upcoming) {
+            $queryBuilder
+                ->andWhere('t.date >= :now')
+                ->setParameter('now', new \DateTime('now'));
+        }
+
+        if($maxNb) {
+            $queryBuilder
+                ->andWhere('t.maxNb = :maxNb')
+                ->setParameter('maxNb', $maxNb);
+        }
 
         return $queryBuilder->getQuery()->getResult();
 

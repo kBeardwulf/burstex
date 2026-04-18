@@ -211,6 +211,14 @@
     height: 40px;
 }
 
+.custom-alignment {
+    margin-top: 6px;
+}
+
+.check-tournament-btn {
+    color : white;
+}
+
 /* Responsive : 2 colonnes sur tablette, 1 sur mobile */
 @media (max-width: 768px) {
     .slider-page {

@@ -64,20 +64,38 @@
 
             <div class="d-flex gap-1">
             {% if isAdmin %}
-                <a href="{{ path('app_tour_edit', {'id': tournament.id}) }}" class="btn btn-warning">Modifier le tournoi</a>
+                {% if tournament.isStarted %}
+                    <form method="post" action="{{ path('app_tour_cancel', {'id': tournament.id}) }}">
+                        <button type="submit" class="btn btn-warning">Annuler le tournoi</button>
+                    </form>
+                {% else %}
+                    <form method="post" action="{{ path('app_tour_start', {'id': tournament.id}) }}">
+                        <button type="submit" class="btn btn-success">Démarrer le tournoi</button>
+                    </form>
+                    <a href="{{ path('app_tour_edit', {'id': tournament.id}) }}" class="btn btn-warning" data-turbo="false">Modifier le tournoi</a>
+                {% endif %}
             {% endif %}
             {% if is_granted('ROLE_USER') %}
-                {% if isPlayer == null %}
-                    <form method="post" action="{{ path('app_tour_register', {'id': tournament.id}) }}">
-                        <input type="hidden" name="_token" value="{{ csrf_token('register' ~ tournament.id) }}">
-                        <button type="submit" class="btn btn-danger">S'inscrire au tournoi</button>
-                    </form>
-                {% elseif isPlayer %}
+
+                {% if tournament.isStarted %}
+                        <button class="btn btn-danger" disabled>Le tournoi a commencé</button>
+
+                    {% elseif players|length >= tournament.maxNb and tournament.maxNb != null %}
+                        <button class="btn btn-danger" disabled>Le tournoi est plein</button>
+
+                    {% elseif isPlayer %}
                     <form method="post" action="{{ path('app_tour_unregister', {'id': tournament.id}) }}">
                         <input type="hidden" name="_token" value="{{ csrf_token('unregister' ~ tournament.id) }}">
                         <button type="submit" class="btn btn-outline-danger">Se désinscrire</button>
                     </form>
+
+                    {% else %}
+                    <form method="post" action="{{ path('app_tour_register', {'id': tournament.id}) }}">
+                        <input type="hidden" name="_token" value="{{ csrf_token('register' ~ tournament.id) }}">
+                        <button type="submit" class="btn btn-danger">S'inscrire au tournoi</button>
+                    </form>
                 {% endif %}
+
             {% endif %}
             </div>
         </div>

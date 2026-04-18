@@ -7,7 +7,7 @@
         <div class="alert alert-danger" role="alert">{{ flash_error }}</div>
     {% endfor %}
 
-    <h1 class="mt-5">{{ tournament is defined ? 'Modifier le tournoi' : 'Créer un tournoi' }}</h1>
+    <h1 class="text-center mt-5">{{ 'is_edit' ? 'Modifier le tournoi' : 'Créer un tournoi' }}</h1>
 
     {{ form_errors(tournamentForm) }}
 
@@ -47,10 +47,78 @@
 
         {{ form_row(tournamentForm.mail) }}
 
-        {{ form_row(tournamentForm.agreeTerms) }}
+        {% if 'is_edit' == false %}
+            {{ form_row(tournamentForm.agreeTerms) }}
+        {% endif %}
 
         {# On aurait pu l'intégrer dans le Formulaire TWIG comme pour les autres #}
-        <button type="submit" class="btn btn-danger">Créer</button>
+        <div class="text-center">
+        <button type="submit" class="btn btn-danger">
+            {% if 'is_edit' == false %}
+                Créer le tournoi
+            {% else %}
+                Modifier le tournoi
+            {% endif %}
+        </button>
+        <a href="{{ path('app_tour_show', {'id': tournament.id}) }}" class="btn btn-dark">Retourner au tournoi</a>
+        </div>
 
     {{ form_end(tournamentForm) }}
+    {% if isEdit is defined and isEdit %}
+        <hr>
+        <section>
+            <div class="pt-2">
+                <div class="d-flex gap-2 mb-4">
+                    <h4>Ordre des participants</h4>
+                    <form method="post" action="{{ path('app_tour_seed', {'id': tournament.id}) }}">
+                    <button type="submit" class="btn btn-danger">Sauvegarder l'ordre</button>
+                </div>
+                    <input type="hidden" name="_token" value="{{ csrf_token('seed' ~ tournament.id) }}">
+                    <input type="hidden" name="order" id="players-order" value="">
+                    
+                    {# added a board where administrator and organizers can modify seeding #}
+                    <div class="d-flex gap-2 mx-auto" style="max-width: 600px;">
+                        {# Static numbers on the left side #}
+                        <div class="d-flex flex-column">
+                            {% for registered in players %}
+                                <div class="d-flex align-items-center justify-content-center" 
+                                    style="height: 53px; width: 30px;">
+                                    <span class="text-muted fw-bold">{{ loop.index }}</span>
+                                </div>
+                            {% endfor %}
+                        </div>
+                        {# drag & droppable player list#}
+                        <div id="players-list" class="list-group w-100">
+                            {% for registered in players %}
+                                <div class="list-group-item d-flex align-items-center gap-2" data-id="{{ registered.id }}">
+
+                                    {% if registered.user.profilePic %}
+                                        <img src="{{ asset('uploads/profiles/' ~ registered.user.profilePic) }}" 
+                                            class="rounded-circle" style="width: 35px; height: 35px; object-fit: cover;">
+                                    {% else %}
+                                        <div class="rounded-circle bg-danger d-flex align-items-center justify-content-center flex-shrink-0"
+                                            style="width: 35px; height: 35px;">
+                                            <span class="text-white fw-bold">{{ registered.user.pseudo|first|upper }}</span>
+                                        </div>
+                                    {% endif %}
+
+                                    <span>{{ registered.user.pseudo }}</span>
+
+                                    {% if registered.seed %}
+                                        <span class="badge bg-secondary ms-auto">seeding actuel avant sauvegarde : #{{ registered.seed }}</span>
+                                    {% endif %}
+
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-danger mt-3">Sauvegarder l'ordre</button>
+                        <a href="{{ path('app_tour_show', {'id': tournament.id}) }}" class="btn btn-dark mt-3">Retourner au tournoi</a>
+                    </div>
+                </form>
+            </div>
+        </section>
+        {{ include('components/sortablePlayers.html.twig') }}
+    {% endif %}
 {% endblock %}

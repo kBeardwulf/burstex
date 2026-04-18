@@ -1,0 +1,16 @@
+<script>
+    window.addEventListener('pageshow', function(event) {
+        if (document.querySelector('.splide') && !document.querySelector('.splide').classList.contains('is-initialized')) {
+            new Splide('.splide', {
+                type: 'loop',
+                perPage: 3,
+                perMove: 3,
+                gap: '1rem',
+                breakpoints: {
+                    768: { perPage: 2, perMove: 2 },
+                    480: { perPage: 1, perMove: 1 },
+                }
+            }).mount();
+        }
+});
+</script>

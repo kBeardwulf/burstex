@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\TournamentRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use App\Entity\Town;
@@ -54,8 +56,18 @@ class Tournament
     #[ORM\ManyToOne]
     private ?User $createdBy = null;
 
+    #[ORM\Column]
+    private ?bool $isStarted = false;
+
+    /**
+     * @var Collection<int, Matches>
+     */
+    #[ORM\OneToMany(targetEntity: Matches::class, mappedBy: 'tournament')]
+    private Collection $AllTourMatches;
+
     public function __construct()
     {
+        $this->AllTourMatches = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -215,6 +227,48 @@ class Tournament
     public function setCreatedBy(User $createdBy): static
     {
         $this->createdBy = $createdBy;
+
+        return $this;
+    }
+
+    public function isStarted(): bool
+    {
+        return $this->isStarted;
+    }
+
+    public function setIsStarted(bool $isStarted): static
+    {
+        $this->isStarted = $isStarted;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Matches>
+     */
+    public function getAllTourMatches(): Collection
+    {
+        return $this->AllTourMatches;
+    }
+
+    public function addAllTourMatch(Matches $allTourMatch): static
+    {
+        if (!$this->AllTourMatches->contains($allTourMatch)) {
+            $this->AllTourMatches->add($allTourMatch);
+            $allTourMatch->setTournament($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAllTourMatch(Matches $allTourMatch): static
+    {
+        if ($this->AllTourMatches->removeElement($allTourMatch)) {
+            // set the owning side to null (unless already changed)
+            if ($allTourMatch->getTournament() === $this) {
+                $allTourMatch->setTournament(null);
+            }
+        }
 
         return $this;
     }

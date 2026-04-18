@@ -54,16 +54,16 @@ class TournamentFormType extends AbstractType
             ->add('address', TextType::class, [
                 'label' => 'Addresse (laissez vide si en ligne!)',
                 'required' => false,
-            ])
-            ->add('agreeTerms', CheckboxType::class, [
-                'mapped'        => false,
-                'label'         => "J'accepter d'adhérer au règlement du tournoi",
-                'constraints'   => [
-                    new IsTrue(
-                        message: 'Vous devez accepter les conditions',
-                    ),
-                ],
-            ])
+            ]);
+
+            if (!$options['is_edit']) {
+                $builder
+                ->add('agreeTerms', CheckboxType::class, [
+                    'mapped'        => false,
+                    'label'         => "J'accepter d'adhérer au règlement du tournoi",
+                    'constraints'   => [ new IsTrue(message: 'Vous devez accepter les conditions')],
+                ]);
+            }
         ;
     }
 
@@ -71,6 +71,7 @@ class TournamentFormType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Tournament::class,
+            'is_edit' => false,
         ]);
     }
 }
