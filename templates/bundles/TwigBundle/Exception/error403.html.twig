@@ -1,0 +1,9 @@
+{% extends 'base.html.twig' %}
+{% block title %}Accès refusé{% endblock %}
+{% block body %}
+    <div class="container text-center mt-5">
+        <h1>403</h1>
+        <p>Vous n'avez pas accès à cette page.</p>
+        <a href="{{ path('app_tournament') }}" class="btn btn-danger">Retour à l'accueil</a>
+    </div>
+{% endblock %}

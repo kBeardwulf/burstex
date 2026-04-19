@@ -219,7 +219,63 @@
     color : white;
 }
 
-/* Responsive : 2 colonnes sur tablette, 1 sur mobile */
+/*------------------------------------*/
+/* CSS for the bracket page */
+
+.full-bracket {
+    overflow-x: auto;
+}
+
+.bracket {
+    min-width: max-content;
+    padding: 20px;
+}
+
+.bracket-player {
+    width: 160px;
+    padding: 8px 12px;
+    border: 1px solid #dee2e6;
+    border-right: none;
+    background: #fff;
+    font-size: 14px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.bracket-score {
+    width: 45px;
+    padding: 8px;
+    border: 1px solid #dee2e6;
+    text-align: center;
+    font-weight: bold;
+    background: #f8f9fa;
+    font-size: 14px;
+}
+
+.bracket-winner .bracket-player {
+    background: #d4edda;
+    font-weight: bold;
+    color: #155724;
+}
+
+.bracket-winner .bracket-score {
+    background: #d4edda;
+    color: #155724;
+}
+
+.bracket-match {
+    border-left: 3px solid #dee2e6;
+    padding-left: 8px;
+    margin-bottom: 16px;
+}
+
+.bracket-round {
+    min-width: 220px;
+}
+
+
+/* Responsive : modify column on tablet & phones */
 @media (max-width: 768px) {
     .slider-page {
         grid-template-columns: repeat(2, 1fr);

@@ -3,7 +3,10 @@
 namespace App\Entity;
 
 use App\Repository\MatchesRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use App\Entity\Registered;
 
 #[ORM\Entity(repositoryClass: MatchesRepository::class)]
 class Matches
@@ -17,7 +20,7 @@ class Matches
     private ?Registered $player1 = null;
 
     #[ORM\ManyToOne]
-    private ?registered $player2 = null;
+    private ?Registered $player2 = null;
 
     #[ORM\Column(nullable: true)]
     private ?int $score1 = null;
@@ -34,6 +37,20 @@ class Matches
 
     #[ORM\ManyToOne]
     private ?Registered $winner = null;
+
+    #[ORM\ManyToOne(targetEntity: self::class, inversedBy: 'nextMatches')]
+    private ?self $nextMatch = null;
+
+    /**
+     * @var Collection<int, self>
+     */
+    #[ORM\OneToMany(targetEntity: self::class, mappedBy: 'nextMatch')]
+    private Collection $nextMatches;
+
+    public function __construct()
+    {
+        $this->nextMatches = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -52,12 +69,12 @@ class Matches
         return $this;
     }
 
-    public function getPlayer2(): ?registered
+    public function getPlayer2(): ?Registered
     {
         return $this->player2;
     }
 
-    public function setPlayer2(?registered $player2): static
+    public function setPlayer2(?Registered $player2): static
     {
         $this->player2 = $player2;
 
@@ -120,6 +137,48 @@ class Matches
     public function setWinner(?Registered $winner): static
     {
         $this->winner = $winner;
+
+        return $this;
+    }
+
+    public function getNextMatch(): ?self
+    {
+        return $this->nextMatch;
+    }
+
+    public function setNextMatch(?self $nextMatch): static
+    {
+        $this->nextMatch = $nextMatch;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, self>
+     */
+    public function getNextMatches(): Collection
+    {
+        return $this->nextMatches;
+    }
+
+    public function addNextMatch(self $nextMatch): static
+    {
+        if (!$this->nextMatches->contains($nextMatch)) {
+            $this->nextMatches->add($nextMatch);
+            $nextMatch->setNextMatch($this);
+        }
+
+        return $this;
+    }
+
+    public function removeNextMatch(self $nextMatch): static
+    {
+        if ($this->nextMatches->removeElement($nextMatch)) {
+            // set the owning side to null (unless already changed)
+            if ($nextMatch->getNextMatch() === $this) {
+                $nextMatch->setNextMatch(null);
+            }
+        }
 
         return $this;
     }

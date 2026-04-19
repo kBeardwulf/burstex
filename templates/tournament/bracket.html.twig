@@ -1,0 +1,159 @@
+{% extends 'base.html.twig' %}
+{% block title %}Bracket - {{ tournament.name }}{% endblock %}
+{% block body %}
+
+<div class="container-fluid mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>{{ tournament.name }}</h1>
+        <div class="d-flex gap-2">
+            {% if isAdmin and not tournament.isStarted %}
+                <form method="post" action="{{ path('app_tour_start', {'id': tournament.id}) }}">
+                    <button type="submit" class="btn btn-success">Démarrer le tournoi</button>
+                </form>
+                <a href="{{ path('app_tour_edit', {'id': tournament.id}) }}" data-turbo="false" class="btn btn-warning">
+                    Modifier le seeding
+                </a>
+                {% else %}
+                    {% if isAdmin %}
+                        <form method="post" action="{{ path('app_tour_cancel', {'id': tournament.id}) }}">
+                            <button type="submit" class="btn btn-warning">Annuler le tournoi</button>
+                        </form>
+                    {% endif %}
+            {% endif %}
+            <a href="{{ path('app_tour_show', {'id': tournament.id}) }}" class="btn btn-dark">Retour au tournoi</a>
+        </div>
+    </div>
+
+    {# Bracket - scrollable horizontalement si besoin #}
+    <div class="full-bracket">
+        <div class="bracket d-flex gap-5">
+            
+            {% if tournament.isStarted %}
+                {# Vrai bracket avec les matchs générés #}
+                {% for roundNumber, matchesInRound in rounds %}
+                <div class="bracket-round">
+                    <h5 class="text-center mb-3">
+                        {% if roundNumber == 1 %}Quarts de finale
+                        {% elseif roundNumber == 2 %}Demi-finales
+                        {% else %}Finale
+                        {% endif %}
+                    </h5>
+
+                    <div class="bracket-matches d-flex flex-column justify-content-around" 
+                         style="height: 600px;">
+                        {% for match in matchesInRound %}
+                        <div class="bracket-match">
+                            
+                            {# Joueur 1 #}
+                            <div class="d-flex align-items-center {{ match.winner and match.winner == match.player1 ? 'bracket-winner' : '' }}">
+                                <div class="bracket-player">
+                                    {{ match.player1 ? match.player1.user.pseudo : 'TBD' }}
+                                </div>
+                                <div class="bracket-score">
+                                    {{ match.score1 ?? '-' }}
+                                </div>
+                            </div>
+
+                            {# Joueur 2 #}
+                            <div class="d-flex align-items-center {{ match.winner and match.winner == match.player2 ? 'bracket-winner' : '' }}">
+                                <div class="bracket-player">
+                                    {{ match.player2 ? match.player2.user.pseudo : 'TBD' }}
+                                </div>
+                                <div class="bracket-score">
+                                    {{ match.score2 ?? '-' }}
+                                </div>
+                            </div>
+
+                            {# Formulaire score - admin seulement #}
+                            {% if isAdmin %}
+                                <form method="post" action="{{ path('app_tour_score', {'id': tournament.id, 'matchId': match.id}) }}" class="mt-1">
+                                    <input type="hidden" name="_token" value="{{ csrf_token('score' ~ match.id) }}">
+                                    <div class="d-flex gap-2 align-items-center mt-1">
+                                        <select name="score1" class="form-select form-select-sm" style="width: 70px;">
+                                            {% for i in 0..5 %}
+                                                <option value="{{ i }}" {% if match.score1 == i %}selected{% endif %}>{{ i }}</option>
+                                            {% endfor %}
+                                        </select>
+                                        <span>vs</span>
+                                        <select name="score2" class="form-select form-select-sm" style="width: 70px;">
+                                            {% for i in 0..5 %}
+                                                <option value="{{ i }}" {% if match.score2 == i %}selected{% endif %}>{{ i }}</option>
+                                            {% endfor %}
+                                        </select>
+                                        <button type="submit" class="btn btn-danger btn-sm">✓</button>
+                                    </div>
+                                </form>
+                            {% endif %}
+
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endfor %}
+
+            {% else %}
+                {# Prévisualisation avec matchPreview #}
+                <div class="bracket-round">
+                    <h5 class="text-center mb-3">Quarts de finale</h5>
+                    <div class="bracket-matches d-flex flex-column gap-3">
+                        {% for match in matchPreview %}
+                        <div class="bracket-match">
+                            <div class="d-flex align-items-center">
+                                <div class="bracket-player">
+                                    {{ match.player1 ? match.player1.user.pseudo : 'TBD' }}
+                                </div>
+                                <div class="bracket-score">-</div>
+                            </div>
+                            <div class="d-flex align-items-center">
+                                <div class="bracket-player">
+                                    {{ match.player2 ? match.player2.user.pseudo : 'TBD' }}
+                                </div>
+                                <div class="bracket-score">-</div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                {# Demi-finales - slots vides #}
+                <div class="bracket-round">
+                    <h5 class="text-center mb-3">Demi-finales</h5>
+                    <div class="bracket-matches d-flex flex-column justify-content-around" style="height: 400px;">
+                        {% for i in 1..2 %}
+                        <div class="bracket-match">
+                            <div class="d-flex align-items-center">
+                                <div class="bracket-player text-muted fst-italic">TBD</div>
+                                <div class="bracket-score">-</div>
+                            </div>
+                            <div class="d-flex align-items-center">
+                                <div class="bracket-player text-muted fst-italic">TBD</div>
+                                <div class="bracket-score">-</div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                {# Finale - slot vide #}
+                <div class="bracket-round">
+                    <h5 class="text-center mb-3">Finale</h5>
+                    <div class="bracket-matches d-flex flex-column justify-content-around" style="height: 400px;">
+                        <div class="bracket-match">
+                            <div class="d-flex align-items-center">
+                                <div class="bracket-player text-muted fst-italic">TBD</div>
+                                <div class="bracket-score">-</div>
+                            </div>
+                            <div class="d-flex align-items-center">
+                                <div class="bracket-player text-muted fst-italic">TBD</div>
+                                <div class="bracket-score">-</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}

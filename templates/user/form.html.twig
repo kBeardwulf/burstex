@@ -11,7 +11,7 @@
 
     {{ form_errors(registrationForm) }}
 
-    {{ form_start(registrationForm) }}
+    {{ form_start(registrationForm, {'attr': {'data-turbo': 'false'}}) }}
         
         {{ form_row(registrationForm.mail) }}
 
@@ -50,7 +50,7 @@
         {{ form_row(registrationForm.agreeTerms) }}
 
         {# On aurait pu l'intégrer dans le Formulaire TWIG comme pour les autres #}
-        <button type="submit" class="btn btn-danger">S'inscrire</button>
+        <button type="submit" class="btn btn-danger" >S'inscrire</button>
 
     {{ form_end(registrationForm) }}
 {% endblock %}

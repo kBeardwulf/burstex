@@ -78,7 +78,7 @@
                             </p>
 
                             <p class="card-text">
-                                <small class="text-muted">Créé par <strong>{{ tournament.createdBy.pseudo }}</strong></small>
+                                <small class="text-muted">Créé par <strong>{{ tournament.createdBy ? tournament.createdBy.pseudo : 'Inconnu' }}</strong></small>
                             </p>
                         </div>
 

@@ -41,10 +41,10 @@ class ResetPasswordController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            /** @var string $email */
-            $email = $form->get('email')->getData();
+            /** @var string $mail */
+            $mail = $form->get('email')->getData();
 
-            return $this->processSendingPasswordResetEmail($email, $mailer, $translator
+            return $this->processSendingPasswordResetEmail($mail, $mailer, $translator
             );
         }
 
@@ -132,7 +132,7 @@ class ResetPasswordController extends AbstractController
     private function processSendingPasswordResetEmail(string $emailFormData, MailerInterface $mailer, TranslatorInterface $translator): RedirectResponse
     {
         $user = $this->entityManager->getRepository(User::class)->findOneBy([
-            'email' => $emailFormData,
+            'mail' => $emailFormData,
         ]);
 
         // Do not reveal whether a user account was found or not.
@@ -156,9 +156,9 @@ class ResetPasswordController extends AbstractController
             return $this->redirectToRoute('app_check_email');
         }
 
-        $email = (new TemplatedEmail())
+        $mail = (new TemplatedEmail())
             ->from(new Address('noreply@pokedwwm.net', 'Mot de passe PokeDWWM'))
-            ->to((string) $user->getEmail())
+            ->to((string) $user->getMail())
             ->subject('Your password reset request')
             ->htmlTemplate('reset_password/email.html.twig')
             ->context([
@@ -166,7 +166,7 @@ class ResetPasswordController extends AbstractController
             ])
         ;
 
-        $mailer->send($email);
+        $mailer->send($mail);
 
         // Store the token object in session for retrieval in check-email route.
         $this->setTokenObjectInSession($resetToken);

@@ -7,11 +7,11 @@
         <div class="alert alert-danger" role="alert">{{ flash_error }}</div>
     {% endfor %}
 
-    <h1 class="text-center mt-5">{{ 'is_edit' ? 'Modifier le tournoi' : 'Créer un tournoi' }}</h1>
+    <h1 class="text-center mt-5">{{ isEdit ? 'Modifier le tournoi' : 'Créer un tournoi' }}</h1>
 
     {{ form_errors(tournamentForm) }}
 
-    {{ form_start(tournamentForm) }}
+    {{ form_start(tournamentForm, {'attr': {'data-turbo': 'false'}}) }}
         
         {{ form_row(tournamentForm.name) }}
 
@@ -47,20 +47,22 @@
 
         {{ form_row(tournamentForm.mail) }}
 
-        {% if 'is_edit' == false %}
+        {% if isEdit == false %}
             {{ form_row(tournamentForm.agreeTerms) }}
         {% endif %}
-
-        {# On aurait pu l'intégrer dans le Formulaire TWIG comme pour les autres #}
+        
         <div class="text-center">
         <button type="submit" class="btn btn-danger">
-            {% if 'is_edit' == false %}
+            {% if isEdit == false %}
                 Créer le tournoi
             {% else %}
                 Modifier le tournoi
             {% endif %}
         </button>
-        <a href="{{ path('app_tour_show', {'id': tournament.id}) }}" class="btn btn-dark">Retourner au tournoi</a>
+        {% if isEdit %}
+            <a href="{{ path('app_tour_bracket', {'id': tournament.id}) }}" class="btn btn-success">Voir le bracket</a>
+            <a href="{{ path('app_tour_show', {'id': tournament.id}) }}" class="btn btn-dark">Retourner au tournoi</a>
+        {% endif %}
         </div>
 
     {{ form_end(tournamentForm) }}
@@ -105,7 +107,7 @@
                                     <span>{{ registered.user.pseudo }}</span>
 
                                     {% if registered.seed %}
-                                        <span class="badge bg-secondary ms-auto">seeding actuel avant sauvegarde : #{{ registered.seed }}</span>
+                                        <span class="badge bg-secondary ms-auto">seeding avant sauvegarde : #{{ registered.seed }}</span>
                                     {% endif %}
 
                                 </div>
@@ -114,6 +116,7 @@
                     </div>
                     <div class="text-center">
                         <button type="submit" class="btn btn-danger mt-3">Sauvegarder l'ordre</button>
+                        <a href="{{ path('app_tour_bracket', {'id': tournament.id}) }}" class="btn btn-success mt-3">Voir le bracket</a>
                         <a href="{{ path('app_tour_show', {'id': tournament.id}) }}" class="btn btn-dark mt-3">Retourner au tournoi</a>
                     </div>
                 </form>
