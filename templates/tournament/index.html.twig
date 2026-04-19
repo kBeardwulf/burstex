@@ -10,7 +10,7 @@
         <img class="logo-resize" src="{{ asset('images/BURST.ex.png') }}">
     </div>
     <div class="text-center mb-4">
-        <a class="btn btn-success btn-lg" href="{{ path('app_tour_create') }}">Créer mon tournoi</a>
+        <a class="btn btn-danger btn-lg" href="{{ path('app_tour_create') }}">Créer mon tournoi</a>
     </div>
     <h5 class="text-center mb-5">Ou alors</h5>
     <div id="search-container">
@@ -19,7 +19,7 @@
         <form method="get" action="{{ path('app_tour_list') }}">
             <div class="d-flex">
                 <input class="form-control form-control-lg customSearchBar" name="search" type="text" placeholder="Rechercher un tournoi...">
-                <button type="submit" class=" ms-3 btn btn-primary px-3">Rechercher</button>
+                <button type="submit" class=" ms-3 btn btn-danger px-3">Rechercher</button>
             </div>
 
             {# Des filtres pour le tri #}
