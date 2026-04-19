@@ -9,10 +9,10 @@
     <div class="text-center">
         <img class="logo-resize" src="{{ asset('images/BURST.ex.png') }}">
     </div>
-    <div class="text-center mt-5 mb-4">
+    <div class="text-center mb-4">
         <a class="btn btn-success btn-lg" href="{{ path('app_tour_create') }}">Créer mon tournoi</a>
     </div>
-    <h3 class="text-center mb-5">Ou alors</h3>
+    <h5 class="text-center mb-5">Ou alors</h5>
     <div id="search-container">
 
         {# Champ commun #}
@@ -96,21 +96,71 @@
 
 {{ include('components/splide.html.twig') }}
 
-<section>
-    <div class="text-center mt-5">
-        <h2>Tournoi en vedette</h2>
-        <div class="card mb-3">
-            <img src="..." class="card-img-top" alt="...">
-            <div class="card-body">
-                <h5 class="card-title">Card title</h5>
-                <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-                <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+{% if featuredTournament %}
+<section class="mt-5">
+    <div class="container">
+        <h2 class="featured-title">🏆 Tournoi en vedette</h2>
+        <div class="featured-card">
+            
+            {# Bannière #}
+            {% if featuredTournament.banner %}
+                <img src="{{ asset('uploads/banners/' ~ featuredTournament.banner) }}" class="featured-banner">
+            {% else %}
+                <div class="featured-banner-placeholder">
+                    <span>Aucune bannière</span>
+                </div>
+            {% endif %}
+
+            <div class="featured-body">
+                {# Icone + Titre #}
+                <div class="d-flex align-items-center gap-3 mb-3">
+                    {% if featuredTournament.icon %}
+                        <img src="{{ asset('uploads/banners/' ~ featuredTournament.icon) }}" class="featured-icon rounded-3">
+                    {% else %}
+                        <div class="featured-icon-placeholder rounded-3">
+                            <span>{{ featuredTournament.name|first|upper }}</span>
+                        </div>
+                    {% endif %}
+                    <div>
+                        <h3 class="featured-name">{{ featuredTournament.name }}</h3>
+                        <span class="badge featured-badge">{{ featuredTournament.discipline }}</span>
+                    </div>
+                </div>
+
+                {# Infos #}
+                <div class="featured-infos">
+                    <div class="featured-info-item">
+                        <span class="featured-info-icon">📅</span>
+                        <span>{{ featuredTournament.date|date('d/m/Y') }} → {{ featuredTournament.endDate|date('d/m/Y') }}</span>
+                    </div>
+                    <div class="featured-info-item">
+                        <span class="featured-info-icon">📍</span>
+                        <span>{{ featuredTournament.location ? featuredTournament.location.name : 'En ligne' }}</span>
+                    </div>
+                    <div class="featured-info-item">
+                        <span class="featured-info-icon">💰</span>
+                        <span>{{ featuredTournament.price ? featuredTournament.price ~ ' €' : 'Gratuit' }}</span>
+                    </div>
+                    <div class="featured-info-item">
+                        <span class="featured-info-icon">👥</span>
+                        <span>{{ featuredTournament.maxNb ? featuredTournament.maxNb ~ ' participants max' : 'Places illimitées' }}</span>
+                    </div>
+                </div>
+
+                {# Description #}
+                {% if featuredTournament.description %}
+                    <div class="featured-description">
+                        {{ featuredTournament.description|slice(0, 420)|raw }}...
+                    </div>
+                {% endif %}
+
+                <a href="{{ path('app_tour_show', {'id': featuredTournament.id}) }}" class="featured-btn">
+                    Voir le tournoi →
+                </a>
             </div>
-            <ul class="list-group list-group-flush">
-                <li class="list-group-item">An item</li>
-            </ul>
         </div>
     </div>
 </section>
+{% endif %}
 
 {% endblock %}

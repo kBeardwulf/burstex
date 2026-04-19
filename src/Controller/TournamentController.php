@@ -24,9 +24,12 @@ final class TournamentController extends AbstractController
     {
         $tournaments = $tournamentRepository->findBy([], ['date' => 'ASC']);
 
+        $featuredTournament = $tournamentRepository->find(3);
+
         return $this->render('tournament/index.html.twig', [
             'controller_name' => 'TournamentController',
             'tournaments' => $tournaments,
+            'featuredTournament' => $featuredTournament,
         ]);
     }
 

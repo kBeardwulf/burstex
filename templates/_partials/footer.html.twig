@@ -1,5 +1,46 @@
-<footer class="footer-fixed bg-dark text-white mt-5 py-4">
-    <div class="container text-center">
-        <p class="mb-1 fw-semibold">DWWM - 2026</p>
+<footer id="main-footer">
+    <div class="container">
+        <div class="footer-grid">
+            
+            {# Colonne logo #}
+            <div class="footer-col">
+                <span class="footer-brand">Burst<span class="brand-dot">.ex</span></span>
+                <p class="footer-desc">La plateforme de gestion de tournois compétitifs. Créez, gérez et participez à des tournois en ligne ou en présentiel.</p>
+            </div>
+
+            {# Colonne navigation #}
+            <div class="footer-col">
+                <h6 class="footer-title">Navigation</h6>
+                <ul class="footer-links">
+                    <li><a href="{{ path('app_tournament') }}" data-turbo="false">Accueil</a></li>
+                    <li><a href="{{ path('app_tour_list') }}">Tous les tournois</a></li>
+                    {% if app.user %}
+                    <li><a href="{{ path('app_tour_dashboard') }}">Mes tournois</a></li>
+                    <li><a href="{{ path('app_tour_create') }}">Créer un tournoi</a></li>
+                    {% else %}
+                    <li><a href="{{ path('app_login') }}">Se connecter</a></li>
+                    <li><a href="{{ path('app_user_create') }}">S'inscrire</a></li>
+                    {% endif %}
+                </ul>
+            </div>
+
+            {# Colonne infos #}
+            <div class="footer-col">
+                <h6 class="footer-title">Informations</h6>
+                <ul class="footer-links">
+                    <li><a href="#">Règlement</a></li>
+                    <li><a href="#">Conditions d'utilisation</a></li>
+                    <li><a href="#">Mentions légales</a></li>
+                    <li><a href="#">Contact</a></li>
+                </ul>
+            </div>
+
+        </div>
+
+        <div class="footer-bottom">
+            <span>© 2026 Burst.ex — DWWM</span>
+            <span class="footer-bottom-dot">•</span>
+            <span>Tous droits réservés</span>
+        </div>
     </div>
 </footer>

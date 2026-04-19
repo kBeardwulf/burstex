@@ -1,46 +1,38 @@
 <header>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-danger">
+    <nav class="navbar navbar-expand-lg" id="main-navbar">
         <div class="container">
-            <a class="navbar-brand fw-bold" href="{{ path('app_tournament') }}" data-turbo="false">
-                Burst.ex
+            <a class="navbar-brand" href="{{ path('app_tournament') }}" data-turbo="false">
+                <img src="{{ asset('images/burstexpetit.png') }}" style="height:50px;">
+                <!-- <span class="brand-burst">Burst</span><span class="brand-dot">.ex</span>-->
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarMain">
-                <ul class="navbar-nav ms-auto">
-
+                <ul class="navbar-nav ms-auto align-items-center gap-1">
                     <li class="nav-item">
-                        <a href="{{ path('app_tour_list') }}" class="nav-link">Voir tout les tournois</a>
+                        <a href="{{ path('app_tour_list') }}" class="nav-link nav-link-custom">Tournois</a>
                     </li>
-
-                    {# On vérifie si un utilisateur est connecté ou non #}
                     {% if app.user %}
                     <li class="nav-item">
-                        <a href="{{ path('app_tour_dashboard') }}" class="nav-link">Mes tournois</a>
+                        <a href="{{ path('app_tour_dashboard') }}" class="nav-link nav-link-custom">Mes tournois</a>
                     </li>
-
                     <li class="nav-item">
-                        <a href="{{ path('app_tour_create') }}" class="nav-link">Créer un tournoi</a>
+                        <a href="{{ path('app_tour_create') }}" class="btn btn-create ms-2">+ Créer</a>
                     </li>
-
                     <li class="nav-item">
-                        <a href="{{ path('app_logout') }}" class="nav-link">Se déconnecter</a>
+                        <a href="{{ path('app_logout') }}" class="btn btn-logout ms-2">Déconnexion</a>
                     </li>
                     {% else %}
-
                     <li class="nav-item">
-                        <a href="{{ path('app_user_create') }}" class="nav-link">S'inscrire</a>
+                        <a href="{{ path('app_user_create') }}" class="nav-link nav-link-custom">S'inscrire</a>
                     </li>
-
                     <li class="nav-item">
-                        <a href="{{ path('app_login') }}" class="nav-link">Se connecter</a>
+                        <a href="{{ path('app_login') }}" class="btn btn-create ms-2">Se connecter</a>
                     </li>
                     {% endif %}
-
                 </ul>
             </div>
-            <div class="nav-dot"></div>
         </div>
     </nav>
 </header>
