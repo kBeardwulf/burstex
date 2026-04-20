@@ -56,7 +56,7 @@ final class UserController extends AbstractController
 
             $this->addFlash('success', "L'utilisateur a été créé");
 
-            return $this->redirectToRoute('app_user_index');
+            return $this->redirectToRoute('app_tournament');
         }
 
         return $this->render('user/form.html.twig', [
