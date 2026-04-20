@@ -16,7 +16,10 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
-
+/**
+ * This is the home page of the website.
+ * Display a search bar, recent tournaments & a featured tournament.
+ */
 final class TournamentController extends AbstractController
 {
     #[Route('/tournament/home', name: 'app_tournament')]

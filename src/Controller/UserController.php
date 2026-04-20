@@ -38,7 +38,7 @@ final class UserController extends AbstractController
             /** @var string $plainPassword */
             $plainPassword = $userForm->get('plainPassword')->getData();
 
-            // Dans le cas où le mot de passe n'est pas renseigné
+            // If the password is not filled
             if(!$plainPassword) {
 
                 $plainPassword = "default_password";
@@ -72,7 +72,7 @@ final class UserController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}/edit', name: 'app_user_edit', methods: ['GET', 'POST'])]
+    #[Route('/{id<\d+>}/edit', name: 'app_user_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, User $user, EntityManagerInterface $entityManager): Response
     {
         $form = $this->createForm(UserInfoFormType::class, $user);
@@ -90,7 +90,7 @@ final class UserController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_user_delete', methods: ['POST'])]
+    #[Route('/{id<\d+>}/delete', name: 'app_user_delete', methods: ['POST'])]
     public function delete(Request $request, User $user, EntityManagerInterface $entityManager): Response
     {
         if ($this->isCsrfTokenValid('delete'.$user->getId(), $request->getPayload()->getString('_token'))) {

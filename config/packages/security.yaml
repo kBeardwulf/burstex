@@ -36,11 +36,12 @@ security:
     access_control:
         # - { path: ^/admin, roles: ROLE_ADMIN }
         # - { path: ^/profile, roles: ROLE_USER }
-        - { path: ^/tournament/create, roles: ROLE_USER }
         - { path: ^/tournament/dashboard, roles: ROLE_USER }
         - { path: ^/tournament/\d+/register, roles: ROLE_USER }
         - { path: ^/tournament/\d+/unregister, roles: ROLE_USER }
-        - { path: ^/user, roles: ROLE_USER }
+        - { path: ^/user/create, roles: PUBLIC_ACCESS }
+        - { path: ^/user/\d+/edit, roles: PUBLIC_ACCESS }
+        - { path: ^/user, roles: ROLE_ADMIN }
 
 when@test:
     security:
