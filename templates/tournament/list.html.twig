@@ -69,7 +69,7 @@
                                 <h5 class="card-title mb-0">{{ tournament.name }}</h5>
                             </div>
 
-                            <span class="badge bg-primary mb-2">{{ tournament.discipline }}</span>
+                            <span class="badge bg-primary mb-2">{{ tournament.discipline|slice(0, 30) }}</span>
 
                             <p class="card-text">
                                 <small>📅 {{ tournament.date|date('d/m/Y') }} → {{ tournament.endDate|date('d/m/Y') }}</small><br>

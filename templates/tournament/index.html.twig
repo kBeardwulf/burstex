@@ -123,7 +123,7 @@
                     {% endif %}
                     <div>
                         <h3 class="featured-name">{{ featuredTournament.name }}</h3>
-                        <span class="badge featured-badge">{{ featuredTournament.discipline }}</span>
+                        <span class="badge featured-badge">{{ featuredTournament.discipline|slice(0, 30) }}</span>
                     </div>
                 </div>
 

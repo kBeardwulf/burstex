@@ -1,3 +1,13 @@
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  margin: 0;
+}
+
+main {
+  flex: 1;
+}
 
 /* CSS of the header */
 #main-navbar {
@@ -75,7 +85,7 @@
     background: linear-gradient(135deg, #1a0000 0%, #2d0000 100%);
     padding: 50px 0 20px;
     box-shadow: 0 -2px 15px rgba(139, 0, 0, 0.3);
-    margin-top: 80px;
+    margin-top: auto;
 }
 
 .footer-grid {
