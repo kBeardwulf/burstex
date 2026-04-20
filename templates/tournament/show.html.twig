@@ -17,7 +17,8 @@
             <button class="btn btn-light" onclick="document.getElementById('banner-form').classList.toggle('d-none')">Changer la bannière</button>
 
             {% if tournament.banner %}
-                <form action="{{ path('app_tour_banner_remove', {'id': tournament.id}) }}" method="post" style="display:inline;" onsubmit="return confirm('Supprimer la bannière ?')">
+                <form action="{{ path('app_tour_banner_remove', {'id': tournament.id}) }}" method="post" style="display:inline;"
+                    onsubmit="return confirm('Supprimer la bannière ?')" data-turbo="false">
                     <input type="hidden" name="_token" value="{{ csrf_token('banner_remove' ~ tournament.id) }}">
                     <button type="submit" class="ms-1 btn btn-light">Supprimer la bannière</button>
                 </form>
@@ -26,7 +27,8 @@
         
     </div>
     <div id="banner-form" class="d-none p-3">
-        <form action="{{ path('app_tour_banner', {'id': tournament.id}) }}" method="post" enctype="multipart/form-data">
+        <form action="{{ path('app_tour_banner', {'id': tournament.id}) }}" method="post"
+            enctype="multipart/form-data" data-turbo="false">
             <input type="hidden" name="_token" value="{{ csrf_token('banner' ~ tournament.id) }}">
             <input type="file" name="banner" class="form-control mb-2" accept="image/*">
             <button type="submit" class="btn btn-danger">Enregistrer</button>
@@ -58,18 +60,18 @@
                 </div>
                 <div>
                     <h1 class="mb-0">{{ tournament.name }}</h1>
-                    <span class="badge bg-primary">{{ tournament.discipline }}</span>
+                    <span class="badge bg-primary">{{ tournament.discipline|slice(0, 30) }}</span>
                 </div>
             </div>
 
             <div class="d-flex gap-1">
             {% if isAdmin %}
                 {% if tournament.isStarted %}
-                    <form method="post" action="{{ path('app_tour_cancel', {'id': tournament.id}) }}">
-                        <button type="submit" class="btn btn-warning">Annuler le tournoi</button>
+                    <form method="post" action="{{ path('app_tour_cancel', {'id': tournament.id}) }}" data-turbo="false">
+                        <button type="submit" class="btn btn-warning" >Annuler le tournoi</button>
                     </form>
                 {% else %}
-                    <form method="post" action="{{ path('app_tour_start', {'id': tournament.id}) }}">
+                    <form method="post" action="{{ path('app_tour_start', {'id': tournament.id}) }}" data-turbo="false">
                         <button type="submit" class="btn btn-success">Démarrer le tournoi</button>
                     </form>
                     <a href="{{ path('app_tour_edit', {'id': tournament.id}) }}" class="btn btn-warning" data-turbo="false">Modifier le tournoi</a>
@@ -84,13 +86,13 @@
                         <button class="btn btn-danger" disabled>Le tournoi est plein</button>
 
                     {% elseif isPlayer %}
-                    <form method="post" action="{{ path('app_tour_unregister', {'id': tournament.id}) }}">
+                    <form method="post" action="{{ path('app_tour_unregister', {'id': tournament.id}) }}" data-turbo="false">
                         <input type="hidden" name="_token" value="{{ csrf_token('unregister' ~ tournament.id) }}">
                         <button type="submit" class="btn btn-outline-danger">Se désinscrire</button>
                     </form>
 
                     {% else %}
-                    <form method="post" action="{{ path('app_tour_register', {'id': tournament.id}) }}">
+                    <form method="post" action="{{ path('app_tour_register', {'id': tournament.id}) }}" data-turbo="false">
                         <input type="hidden" name="_token" value="{{ csrf_token('register' ~ tournament.id) }}">
                         <button type="submit" class="btn btn-danger">S'inscrire au tournoi</button>
                     </form>
@@ -102,7 +104,7 @@
 
         {% if isAdmin %}
             <div id="icon-form" class="d-none p-3">
-                <form action="{{ path('app_tour_icon', {'id': tournament.id}) }}" method="post" enctype="multipart/form-data">
+                <form action="{{ path('app_tour_icon', {'id': tournament.id}) }}" method="post" enctype="multipart/form-data" data-turbo="false">
                     <input type="hidden" name="_token" value="{{ csrf_token('icon' ~ tournament.id) }}">
                     <input type="file" name="icon" class="form-control mb-2" accept="image/*">
                     <button type="submit" class="btn btn-danger">Enregistrer</button>
@@ -156,7 +158,7 @@
             </div>
             {% if isAdmin %}
                 <div id="description-form" class="d-none mt-3">
-                    <form action="{{ path('app_tour_description', {'id': tournament.id}) }}" method="post">
+                    <form action="{{ path('app_tour_description', {'id': tournament.id}) }}" method="post" data-turbo="false">
                         <input type="hidden" name="_token" value="{{ csrf_token('description' ~ tournament.id) }}">
                         <textarea id="editor" name="description">{{ tournament.description }}</textarea>
                         <button type="submit" class="btn btn-danger mt-2">Enregistrer</button>
@@ -260,12 +262,12 @@
                 {% if isAdmin %}
                     <div class="alert alert-info">Vous êtes administrateur de ce tournoi.</div>
                 {% elseif isPlayer %}
-                    <form method="post" action="{{ path('app_tour_unregister', {'id': tournament.id}) }}">
+                    <form method="post" action="{{ path('app_tour_unregister', {'id': tournament.id}) }}" data-turbo="false">
                         <input type="hidden" name="_token" value="{{ csrf_token('unregister' ~ tournament.id) }}">
                         <button type="submit" class="btn btn-lg btn-outline-danger">Se désinscrire</button>
                     </form>
                 {% else %}
-                    <form method="post" action="{{ path('app_tour_register', {'id': tournament.id}) }}">
+                    <form method="post" action="{{ path('app_tour_register', {'id': tournament.id}) }}" data-turbo="false">
                             <input type="hidden" name="_token" value="{{ csrf_token('register' ~ tournament.id) }}">
                             <button type="submit" class="btn btn-lg btn-danger">S'inscrire au tournoi</button>
                         </form
