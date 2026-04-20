@@ -172,12 +172,15 @@
                 </div>
 
                 <!--CDN d'un WYSIWIG nommé "TinyMCE" afin de pouvoir manipuler ce que l'on affiche dans la description-->
-                <script src="https://cdn.tiny.cloud/1/h3u3ej96vt5yj4s2d3zag28jgig4ei8ni5asqfzr6axiy3ky/tinymce/6/tinymce.min.js"></script>
+                <script src="{{ asset('assets/tinymce/tinymce.min.js') }}"></script>
                 <script>
                     tinymce.init({
                         selector: '#editor',
-                        plugins: 'lists link',
-                        toolbar: 'bold italic underline | bullist numlist | link',
+                        menubar: false,
+                        license_key: 'gpl',
+                        plugins: 'lists link advlist',
+                        toolbar: 'bold italic underline | fontsize | bullist numlist | link',
+                        content_css: 'default',
                     });
                 </script>
             {% endif %}
