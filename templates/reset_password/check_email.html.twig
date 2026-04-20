@@ -3,7 +3,7 @@
 {% block title %}Password Reset Email Sent{% endblock %}
 
 {% block body %}
-    <p>
+    <p class="mt-5">
         Si un compte existe à cet e-mail, vous recevrez un e-mail pour changer votre mot de passe.
          {{ resetToken.expirationMessageKey|trans(resetToken.expirationMessageData, 'ResetPasswordBundle') }}.
     </p>
