@@ -1,4 +1,15 @@
 
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  margin: 0;
+}
+
+main {
+  flex: 1;
+}
+
 /* CSS of the header */
 #main-navbar {
     background: linear-gradient(135deg, #8b0000 0%, #c0392b 100%);
